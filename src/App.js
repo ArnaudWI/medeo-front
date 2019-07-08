@@ -1,25 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+//import of components
+import MainComponent from './components/main-component';
+// import Reducers
+import deviceData from './components/reducers/devicedata.reducer';
+
+// import Provider / Redux
+import {Provider} from 'react-redux';
+import {createStore, combineReducers} from 'redux';
+
+// Store setup
+const store = createStore(combineReducers({deviceData}));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <MainComponent/>
+    </Provider>
   );
 }
 
