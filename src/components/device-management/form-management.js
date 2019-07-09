@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 //import REDUX
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 class ManagementForm extends Component {
 
@@ -17,17 +18,42 @@ class ManagementForm extends Component {
     deviceUpdated: {}
   }
 
+  change = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
   updateDevice = e => {
-    fetch(`http://hapi.fhir.org/baseDstu3/Device/${this.state.Id}?_format=json&_pretty=true`, {
-     method: 'PUT',
-     headers: {'Content-Type':'application/fhir+json'},
-     body: `Location=${this.state.Location}&Manufacturer=${this.state.Manufacturer}&ManufactureDate=${this.state.ManufactureDate}&ExpiredDate=${this.state.ExpiredDate}`
-   })
-    .then(response => response.json())
-    .then(deviceUpdated => this.setState({ deviceUpdated: deviceUpdated}))
-    .catch(error => console.error(error))
-    e.preventDefault() //pour ne pas faire apparaitre la data sur l'url
-    // réinitialise les states pour refaire apparaitre le placeholder
+    // axios.put(`http://hapi.fhir.org/baseDstu3/Device/${this.state.Id}?_format=json&_pretty=true`, {
+    //     resourceType: "Device",
+    //     bonjour: "bonjour",
+    //     id: this.state.Id,
+    //     Location: this.state.Location,
+    //     Manufacturer: this.state.Manufacturer,
+    //     ManufactureDate: this.state.ManufactureDate,
+    //     ExpiredDate: this.state.ExpiredDate
+    // }, {
+    //   headers: {
+    //     "Content-Type": "application/fhir+json"
+    //   }
+    // })
+    // .then(function (response) {
+    //   console.log(response);
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    // });
+
+   //  fetch(`http://hapi.fhir.org/baseDstu3/Device/${this.state.Id}?_format=json&_pretty=true`, {
+   //   method: 'PUT',
+   //   headers: {'Content-Type':'application/fhir+json'},
+   //   body: `Location=${this.state.Location}&Manufacturer=${this.state.Manufacturer}&ManufactureDate=${this.state.ManufactureDate}&ExpiredDate=${this.state.ExpiredDate}`
+   // })
+   //  .then(response => response.json())
+   //  .then(deviceUpdated => this.setState({ deviceUpdated: deviceUpdated}))
+   //  .catch(error => console.error(error))
+    e.preventDefault()
     this.setState({
       Id: '',
       Location: '',
@@ -38,7 +64,7 @@ class ManagementForm extends Component {
   }
 
   render () {
-    console.log(this.props.deviceData)
+
     return (
       <div style={styles.container}>
         <div style={styles.content}>
@@ -48,8 +74,8 @@ class ManagementForm extends Component {
             style={styles.input}
             name="Id"
             placeholder="ID"
-            value={this.props.deviceData.id === undefined ? this.state.Id : this.props.deviceData.id}
-            onChange={e => this.setState({ Id: e.target.value})}
+            value={this.state.Id}
+            onChange={e => this.change(e)}
           />
           <br />
           <label style={styles.label}>Location</label>
@@ -57,8 +83,8 @@ class ManagementForm extends Component {
             style={styles.input}
             name="Location"
             placeholder="Location"
-            value={this.props.deviceData.location === undefined ? this.state.Location : this.props.deviceData.location}
-            onChange={e => this.setState({ Location: e.target.value})}
+            value={this.state.Location}
+            onChange={e => this.change(e)}
           />
           <br />
           <label style={styles.label}>Manufacturer</label>
@@ -66,17 +92,17 @@ class ManagementForm extends Component {
             style={styles.input}
             name="Manufacturer"
             placeholder="Manufacturer"
-            value={this.props.deviceData.manufacturer === undefined ? this.state.Manufacturer : this.props.deviceData.manufacturer}
-            onChange={e => this.setState({ Manufacturer: e.target.value})}
+            value={this.state.Manufacturer}
+            onChange={e => this.change(e)}
           />
           <br />
           <label style={styles.label}>Manufactured Date</label>
           <input
             style={styles.input}
-            name="ManufacturedDate"
+            name="ManufactureDate"
             placeholder="Manufactured Date"
-            value={this.props.deviceData.manufactureDate === undefined ? this.state.ManufactureDate : this.props.deviceData.manufactureDate}
-            onChange={e => this.setState({ ManufacturedDate: e.target.value})}
+            value={this.state.ManufactureDate}
+            onChange={e => this.change(e)}
           />
           <br />
           <label style={styles.label}>Expired Date</label>
@@ -84,8 +110,8 @@ class ManagementForm extends Component {
             style={styles.input}
             name="ExpiredDate"
             placeholder="Expired Date"
-            value={this.props.deviceData.expiredDate === undefined ? this.state.ExpiredDate : this.props.deviceData.expiredDate}
-            onChange={e => this.setState({ ExpiredDate: e.target.value})}
+            value={this.state.ExpiredDate}
+            onChange={e => this.change(e)}
           />
           <br />
           <Button style={styles.button} onClick={this.updateDevice}>Update Device</Button>
@@ -99,7 +125,7 @@ class ManagementForm extends Component {
 const mapStateToProps = state => {
   return {
     deviceData: state.deviceData,
-  };
+  }
 }
 
 export default connect(mapStateToProps, null)(ManagementForm);
